@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   nx: nrwl/nx@1.6.1
+  sonarcloud: sonarsource/sonarcloud@1.1.1
 
 jobs:
   agent:
@@ -26,6 +27,7 @@ jobs:
       NX_CLOUD_DISTRIBUTED_EXECUTION: 'true'
     steps:
       - checkout
+      - sonarcloud/scan
       - run:
           name: Install dependencies
           command: npm ci
