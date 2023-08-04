@@ -44,6 +44,7 @@ jobs:
       - run:
           name: Run test
           command: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=test --parallel=3 --ci --code-coverage
+      - codecov/upload
       - run:
           name: Run build
           command: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=build --parallel=3
