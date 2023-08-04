@@ -2,6 +2,7 @@ version: 2.1
 
 orbs:
   nx: nrwl/nx@1.6.1
+  codecov: codecov/codecov@3.2.5
 
 jobs:
   agent:
