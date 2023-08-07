@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   nx: nrwl/nx@1.6.1
   codecov: codecov/codecov@3.2.5
+  docker: circleci/docker@2.2.0
 
 jobs:
   agent:
@@ -45,6 +46,9 @@ jobs:
       - run:
           name: Run build
           command: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=build --parallel=3
+      - docker/publish:
+          dockerfile: Dockerfile
+          image: ricochetbrown7/against-all-odds
       - run:
           name: Stop all agents
           command: npx nx-cloud stop-all-agents
