@@ -27,7 +27,6 @@ jobs:
     environment:
       NX_CLOUD_DISTRIBUTED_EXECUTION: 'true'
     steps:
-      - setup_remote_docker
       - checkout
       - run:
           name: Install dependencies
@@ -47,9 +46,6 @@ jobs:
       - run:
           name: Run build
           command: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=build --parallel=3
-      - docker/check
-      - docker/build:
-          image: ricochetbrown7/against-all-odds
       - run:
           name: Stop all agents
           command: npx nx-cloud stop-all-agents
@@ -67,3 +63,9 @@ workflows:
               ordinal: [1, 2, 3]
       - main:
           name: Nx Cloud Main
+
+  build-and-publish-docker-image:
+    jobs:
+      - docker/publish:
+          image: ricochetbrown7/$CIRCLE_PROJECT_REPONAME
+          use-docker-credentials-store: true
