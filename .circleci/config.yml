@@ -50,6 +50,20 @@ jobs:
           name: Stop all agents
           command: npx nx-cloud stop-all-agents
           when: always
+  build-and-push:
+    executor: docker/docker
+    steps:
+      - setup_remote_docker
+      - checkout
+      - docker/check
+      - docker/build:
+          image: ricochetbrown7/$CIRCLE_PROJECT_REPONAME
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: ricochetbrown7/$CIRCLE_PROJECT_REPONAME
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
 
 workflows:
   version: 2
@@ -63,9 +77,5 @@ workflows:
               ordinal: [1, 2, 3]
       - main:
           name: Nx Cloud Main
-
-  build-and-publish-docker-image:
-    jobs:
-      - docker/publish:
-          image: ricochetbrown7/$CIRCLE_PROJECT_REPONAME
-          use-docker-credentials-store: true
+      - build-and-push:
+          name: Docker
