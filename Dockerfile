@@ -6,7 +6,7 @@ ARG env=prod
 WORKDIR /app
 COPY package.json /app/
 COPY ./ /app/
-RUN npm install
+# RUN npm install
 # RUN npm run build:app1
 
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
