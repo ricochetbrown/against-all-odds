@@ -57,8 +57,9 @@ jobs:
       - run:
           command: |
             echo "Digest is: $(</tmp/digest.txt)"
-      - doctl/install-and-initialize-cli:
-          executor: doctl/default
+      - run:
+          name: Auth
+          command: doctl auth init
       - run:
           name: SSH into Droplet
           command: doctl compute ssh against-all-odds
