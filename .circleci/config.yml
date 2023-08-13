@@ -3,6 +3,8 @@ version: 2.1
 orbs:
   nx: nrwl/nx@1.6.1
   codecov: codecov/codecov@3.2.5
+  docker: circleci/docker@2.2.0
+  doctl: digitalocean/cli@0.1.1
 
 jobs:
   agent:
@@ -26,6 +28,7 @@ jobs:
     environment:
       NX_CLOUD_DISTRIBUTED_EXECUTION: 'true'
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: Install dependencies
@@ -36,21 +39,35 @@ jobs:
           name: Initialize the Nx Cloud distributed CI run
           command: npx nx-cloud start-ci-run --stop-agents-after="build" --agent-count=3
       - run:
-          name: Check format
-          command: npx nx-cloud record -- npx nx format:check --base=$NX_BASE --head=$NX_HEAD
-      - run:
           name: Run lint
           command: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=lint --parallel=3
       - run:
           name: Run test
           command: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=test --parallel=3 --ci --code-coverage
+      - codecov/upload
       - run:
           name: Run build
           command: npx nx affected --base=$NX_BASE --head=$NX_HEAD --target=build --parallel=3
+      - docker/check
+      - docker/build:
+          image: ricochetbrown7/$CIRCLE_PROJECT_REPONAME
+      - docker/push:
+          digest-path: /tmp/digest.txt
+          image: ricochetbrown7/$CIRCLE_PROJECT_REPONAME
+      - run:
+          command: |
+            echo "Digest is: $(</tmp/digest.txt)"
       - run:
           name: Stop all agents
           command: npx nx-cloud stop-all-agents
           when: always
+  deploy:
+    machine:
+      enabled: true
+    steps:
+      - run:
+          name: Deploy Over SSH
+          command: ssh root@165.227.186.80 "docker run -d -p 80:80 ricochetbrown7/against-all-odds:a74ff6fcdaa8abf1ffdc25692584794413c35e9a"
 
 workflows:
   version: 2
@@ -64,3 +81,7 @@ workflows:
               ordinal: [1, 2, 3]
       - main:
           name: Nx Cloud Main
+      - deploy:
+          name: Deploy to DigitalOcean
+
+#  ssh root@203.0.113.0
