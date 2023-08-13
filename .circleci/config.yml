@@ -67,7 +67,7 @@ jobs:
     steps:
       - run:
           name: Deploy Over SSH
-          command: ssh root@165.227.186.80 "docker run -d -p 80:80 ricochetbrown7/$CIRCLE_PROJECT_REPONAME"
+          command: ssh root@165.227.186.80 "sudo docker run -d -p 80:80 ricochetbrown7/$CIRCLE_PROJECT_REPONAME"
 
 workflows:
   version: 2
