@@ -83,7 +83,5 @@ workflows:
           name: Nx Cloud Main
       - deploy:
           name: Deploy to DigitalOcean
-          requires:
-            - main
 
 #  ssh root@203.0.113.0
