@@ -62,17 +62,13 @@ jobs:
           command: npx nx-cloud stop-all-agents
           when: always
   deploy:
-    docker:
-      - image: cimg/node:lts-browsers
-    environment:
-      NX_CLOUD_DISTRIBUTED_EXECUTION: 'true'
+    machine:
+      enabled: true
     steps:
       - run:
-          name: SSH into Droplet
-          command: doctl compute ssh against-all-odds
-      - run:
-          name: Run docker
-          command: docker run -d -p 80:80 ricochetbrown7/$CIRCLE_PROJECT_REPONAME
+          name: Deploy Over SSH
+          command: |
+          ssh root@104.131.9.98 "docker run -d -p 80:80 ricochetbrown7/$CIRCLE_PROJECT_REPONAME"
 
 workflows:
   version: 2
@@ -86,10 +82,9 @@ workflows:
               ordinal: [1, 2, 3]
       - main:
           name: Nx Cloud Main
-
-  install_and_configure_cli:
-    jobs:
-      - doctl/install_and_initialize_cli:
-          executor: doctl/default
       - deploy:
           name: Deploy to DigitalOcean
+          requires:
+            - main
+
+#  ssh root@203.0.113.0
