@@ -4,7 +4,7 @@ orbs:
   nx: nrwl/nx@1.6.1
   codecov: codecov/codecov@3.2.5
   docker: circleci/docker@2.2.0
-  doctl: digitalocean/cli@1.0.0
+  doctl: digitalocean/cli@0.1.1
 
 jobs:
   agent:
