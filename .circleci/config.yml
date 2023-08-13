@@ -67,7 +67,7 @@ jobs:
     steps:
       - run:
           name: Deploy Over SSH
-          command: ssh root@165.227.186.80 "docker pull ricochetbrown7/against-all-odds && docker run -d -p 80:80 ricochetbrown7/against-all-odds"
+          command: ssh root@165.227.186.80 "docker run -d -p 80:80 ricochetbrown7/against-all-odds:a74ff6fcdaa8abf1ffdc25692584794413c35e9a"
 
 workflows:
   version: 2
